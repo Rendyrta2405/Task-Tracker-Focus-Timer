@@ -1,184 +1,141 @@
-.counter {
-  font-size: 16px;
-  padding: 5px 10px;
-  border-radius: 5px;
-  color: var(--accent);
-  background: var(--accent-bg);
-  border: 2px solid transparent;
-  transition: border-color 0.3s;
-  margin-bottom: 24px;
+@import "tailwindcss";
 
-  &:hover {
-    border-color: var(--accent-border);
-  }
-  &:focus-visible {
-    outline: 2px solid var(--accent);
-    outline-offset: 2px;
-  }
+.tourney-sans-serif {
+  font-family: "Tourney", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 500;
+  font-style: italic;
+  font-variation-settings:
+    "wdth" 125;
 }
 
-.hero {
-  position: relative;
-
-  .base,
-  .framework,
-  .vite {
-    inset-inline: 0;
-    margin: 0 auto;
-  }
-
-  .base {
-    width: 170px;
-    position: relative;
-    z-index: 0;
-  }
-
-  .framework,
-  .vite {
-    position: absolute;
-  }
-
-  .framework {
-    z-index: 1;
-    top: 34px;
-    height: 28px;
-    transform: perspective(2000px) rotateZ(300deg) rotateX(44deg) rotateY(39deg)
-      scale(1.4);
-  }
-
-  .vite {
-    z-index: 0;
-    top: 107px;
-    height: 26px;
-    width: auto;
-    transform: perspective(2000px) rotateZ(300deg) rotateX(40deg) rotateY(39deg)
-      scale(0.8);
-  }
+.honk-system-ui {
+  font-family: "Honk", system-ui;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-style: normal;
+  font-variation-settings:
+    "MORF" 15,
+    "SHLN" 50;
 }
 
-#center {
-  display: flex;
-  flex-direction: column;
-  gap: 25px;
-  place-content: center;
-  place-items: center;
-  flex-grow: 1;
-
-  @media (max-width: 1024px) {
-    padding: 32px 20px 24px;
-    gap: 18px;
-  }
+.jersey-10-charted-regular {
+  font-family: "Jersey 10 Charted", sans-serif;
+  font-weight: 400;
+  font-style: normal;
 }
 
-#next-steps {
-  display: flex;
-  border-top: 1px solid var(--border);
-  text-align: left;
 
-  & > div {
-    flex: 1 1 0;
-    padding: 32px;
-    @media (max-width: 1024px) {
-      padding: 24px 20px;
-    }
-  }
+/* Timer Font (download) */
 
-  .icon {
-    margin-bottom: 16px;
-    width: 22px;
-    height: 22px;
-  }
-
-  @media (max-width: 1024px) {
-    flex-direction: column;
-    text-align: center;
-  }
+@font-face {
+    font-family: 'Digital7';
+    src: url('fonts/10722/digital-7.ttf') format('truetype');
+    font-style: normal;
 }
 
-#docs {
-  border-right: 1px solid var(--border);
 
-  @media (max-width: 1024px) {
-    border-right: none;
-    border-bottom: 1px solid var(--border);
-  }
+::selection {
+   @apply bg-green-500 text-white;
 }
 
-#next-steps ul {
-  list-style: none;
-  padding: 0;
-  display: flex;
-  gap: 8px;
-  margin: 32px 0 0;
-
-  .logo {
-    height: 18px;
-  }
-
-  a {
-    color: var(--text-h);
-    font-size: 16px;
-    border-radius: 6px;
-    background: var(--social-bg);
-    display: flex;
-    padding: 6px 12px;
-    align-items: center;
-    gap: 8px;
-    text-decoration: none;
-    transition: box-shadow 0.3s;
-
-    &:hover {
-      box-shadow: var(--shadow);
-    }
-    .button-icon {
-      height: 18px;
-      width: 18px;
-    }
-  }
-
-  @media (max-width: 1024px) {
-    margin-top: 20px;
-    flex-wrap: wrap;
-    justify-content: center;
-
-    li {
-      flex: 1 1 calc(50% - 8px);
-    }
-
-    a {
-      width: 100%;
-      justify-content: center;
-      box-sizing: border-box;
-    }
-  }
+body {
+  @apply text-gray-700 flex justify-center items-center text-center py-6 min-h-screen;
+   background: linear-gradient(to bottom right, oklch(79.2% 0.209 151.711), oklch(70.4% 0.191 22.216));
 }
 
-#spacer {
-  height: 88px;
-  border-top: 1px solid var(--border);
-  @media (max-width: 1024px) {
-    height: 48px;
-  }
+h1 {
+  @apply text-4xl font-bold font-['Times_New_Roman'] tracking-wide;
 }
 
-.ticks {
-  position: relative;
-  width: 100%;
+h1::after {
+   content: '';
+   display: block;
+   height: 2px;
+   width: 90%;
+   margin: 15px auto;
+   background: linear-gradient(to right, transparent, oklch(62.7% 0.194 149.214), oklch(57.7% 0.245 27.325), transparent);
+}
 
-  &::before,
-  &::after {
-    content: '';
-    position: absolute;
-    top: -4.5px;
-    border: 5px solid transparent;
-  }
+.container {
+  @apply p-6 shadow-2xl rounded-2xl mt-6 flex flex-col justify-center items-center h-auto gap-2;
+   background: linear-gradient(to bottom right, oklch(90.5% 0.182 98.111), oklch(83.7% 0.128 66.29), oklch(65.6% 0.241 354.308));
+}
 
-  &::before {
-    left: 0;
-    border-left-color: var(--border);
-  }
-  &::after {
-    right: 0;
-    border-right-color: var(--border);
-  }
+.task-container {
+   @apply flex
+}
+
+.task-number {
+   @apply flex text-center items-center;
+}
+
+.task-number span {
+   color: #00ff00;
+   @apply block rounded-md text-9xl -m-8;
+}
+
+.list-task {
+  @apply mb-5 p-4 rounded-lg shadow-xl relative overflow-hidden flex justify-center items-center h-50 bg-cover bg-center bg-no-repeat relative;
+}
+
+.list-task h2 {
+  @apply text-3xl leading-tight mb-4 tracking-wide;
+}
+
+.list-task video {
+   @apply absolute inset-0 object-cover
+}
+
+.list-task .content {
+   @apply relative z-1 opacity-75
+}
+
+.container-btn {
+  @apply mb-5 p-4 rounded-md flex justify-center items-center w-full gap-2;
+}
+
+button {
+  @apply font-bold text-sm p-2 rounded-md cursor-pointer;
+}
+
+.add-task-btn {
+  @apply bg-blue-500 text-white;
+}
+
+.reset-task-btn {
+  @apply bg-orange-300;
+}
+.remove-task-btn {
+  @apply bg-red-400 text-gray-100;
+}
+
+.timer {
+    font-family: 'Digital7', sans-serif;
+    color: #00ff00; 
+    background-color: #111; 
+    font-family: 'Digital7', sans-serif;
+    @apply text-2xl w-fit py-1 px-2 rounded-md;
+}
+
+.empty-task {
+   @apply p-9 text-xl bg-gray-100 rounded-md mb-4;
+   background: linear-gradient(to bottom, oklch(88.5% 0.062 18.334), oklch(92.5% 0.084 155.995));
+}
+
+.empty-task h3 {
+   @apply text-2xl mb-3 font-bold text-red-900 tracking-wide
+}
+
+.empty-task p {
+   @apply font-serif italic text-base text-green-900 tracking-wide;
+}
+
+.done-task {
+   @apply line-through text-red-500 italic
+}
+
+.running-task {
+   background: rgba(255, 255, 255, 0.6);
+   @apply w-fit text-center m-auto text-cyan-400 px-2 text-shadow-2xs text-shadow-pink-500 rounded-md shadow-2xl
 }
