@@ -7,6 +7,7 @@ import './App.css';
 function App() {
    const [tasks, setTasks] = useState([]);
    const [videos, setVideos] = useState([]);
+   // const [loadingTasks, setLoadingTasks] = useState(false);
 
    const loadVideos = async () => {
       try {
@@ -22,7 +23,7 @@ function App() {
          const data = await getAllTasks();
          setTasks(data);
       } catch (error) {
-         console.log(error);
+         alert(error);
       }
    };
 
@@ -49,11 +50,33 @@ function App() {
     };
 
     const handleUpdateTaskStatus = async (id, isCompleted, isRunning) => {
-       await updateTaskStatus(id, isCompleted, isRunning);
-       await loadAllTasks();
+       setTasks((prevTasks) => 
+          prevTasks.map((task) => 
+             task.$id === id ? {
+                ...task,
+                isCompleted: !isCompleted
+             } : task
+          )
+       )
+
+       try {
+          await updateTaskStatus(id, isCompleted, isRunning);
+       } catch (error) {
+          alert(error);
+          loadAllTasks();
+       }
     };
 
     const handleUpdateRunningStatus = async (id, isRunning) => {
+       setTasks((prevTasks) => 
+          prevTasks.map((task) => 
+             task.$id === id ? {
+                ...task,
+                isRunning: !isRunning
+             } : task
+          )
+       )
+       
         await updateRunningStatus(id, isRunning);
         await loadAllTasks();
     };

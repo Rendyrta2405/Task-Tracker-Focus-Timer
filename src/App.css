@@ -84,7 +84,7 @@ h1::after {
 }
 
 .list-task {
-  @apply mb-5 p-4 rounded-lg shadow-xl relative overflow-hidden flex justify-center items-center h-50 bg-cover bg-center bg-no-repeat;
+  @apply mb-5 rounded-lg shadow-xl relative overflow-hidden bg-cover bg-center bg-no-repeat w-full min-w-0 flex flex-col justify-center items-center h-auto py-6;
 }
 
 .list-task h2 {
@@ -96,11 +96,11 @@ h1::after {
 }
 
 .list-task .content {
-   @apply relative z-1 opacity-75
+   @apply relative z-1 opacity-75 w-full max-w-full min-w-0 px-4 text-center z-10
 }
 
 .container-btn {
-  @apply mb-5 p-4 rounded-md flex justify-center items-center w-full gap-2 flex-wrap;
+  @apply mb-5 p-4 rounded-md flex flex-wrap justify-center items-center gap-2 mt-4 w-full;
 }
 
 button {
@@ -139,16 +139,32 @@ button {
 }
 
 .task-name-done {
-    @apply line-through text-red-600 italic
+    @apply line-through text-red-600 italic break-words max-w-full block
 }
 
 .task-name-running {
    background: rgba(255, 255, 255, 0.6);
-   @apply w-fit text-center m-auto text-cyan-400 px-2 text-shadow-2xs text-shadow-pink-500 rounded-md shadow-2xl break-all max-w-full;
+   @apply w-fit text-center m-auto text-cyan-400 px-2 text-shadow-2xs text-shadow-pink-500 rounded-md shadow-2xl break-words max-w-full block;
 }
 
 .task-name-not-running {
-    @apply text-cyan-500 break-all;
+    @apply text-cyan-500 break-words;
+}
+
+.running-video {
+   @apply block absolute inset-0 w-full h-full object-cover
+}
+
+.bg-task-not-running {
+   @apply w-full max-w-full min-w-0 px-4 text-center z-10
+}
+
+.btn-task-completed {
+   @apply border border-red-600 text-red-600;
+}
+
+.btn-disabled {
+   @apply pointer-events-none bg-gray-300 text-gray-500 opacity-60;
 }
 
 @media (max-width: 600px) {
@@ -161,8 +177,4 @@ button {
     button {
         @apply font-medium text-xs;
     }
-}
-
-@media (max-width: 600px) {
-
 }
