@@ -15,8 +15,7 @@ export const getAllTasks = async () => {
       const response = await databases.listDocuments(DATABASE_ID, COLLECTION_ID);
       return response.documents;
    } catch (error) {
-      alert(error);
-      // alert('Failed fetching tasks');
+      console.log('Failed fetching tasks', error);
    }
 }
 
@@ -28,13 +27,13 @@ export const createTask = async () => {
          ID.unique(),
          {
             taskName: prompt('Enter Task Name: ',),
-            taskDuration: parseInt(prompt('Enter Task Duration (Optional): ')) || 5,
-            isCompleted: false
+            taskDuration: parseInt(prompt('Enter Task Duration In Minutes (Optional): ')) || 5,
          }
       );
-      alert('Success create task', response);
+      console.log('Success create task', response);
+      return response;
    } catch (error) {
-      alert('Failed Create Task', error);
+      console.log('Failed Create Task', error);
    }
 }
 
@@ -46,11 +45,11 @@ export const updateTaskStatus = async (taskId, isCompleted, isRunning) => {
          taskId,
          {
             isCompleted: !isCompleted,
-            isRunning: isRunning ? false : true,
+            isRunning: isRunning? !isRunning : isRunning,
          }
       );
    } catch (error) {
-      alert(error);
+      console.log(error);
    }
 }
 
@@ -61,11 +60,26 @@ export const updateRunningStatus = async (taskId, isRunning) => {
          COLLECTION_ID,
          taskId,
          {
-            isRunning: !isRunning
+            isRunning: !isRunning,
          }
-      )
+      );
    } catch (error) {
-      alert(error);
+      console.log(error);
+   }
+}
+
+export const resetTask = async (taskId) => {
+   try {
+      const response = await databases.updateDocument(
+          DATABASE_ID,
+          COLLECTION_ID,
+          taskId,
+          {
+             isRunning: false,
+          }
+      );
+   } catch (error) {
+      console.log('Failed reset task', error);
    }
 }
 
@@ -81,6 +95,6 @@ export const removeTask = async (taskId, taskName) => {
          taskId
       );
    } catch (error) {
-      alert(error);
+      console.log(error);
    } 
 }

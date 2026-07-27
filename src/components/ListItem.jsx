@@ -9,6 +9,7 @@ export const ListItem = ({
    videos,
    updateTaskStatus,
    updateRunningStatus,
+   resetTask,
    removeTask,
 }) => {
     const [runningTime, setRunningTime] = useState(taskDuration * 60);
@@ -20,9 +21,9 @@ export const ListItem = ({
     if (runningTime === 0) {
         alert(`"${taskName}" task has complete 🎉 
         Let's start a new task!`);
-        updateRunningStatus(taskId, isRunning);
+        resetTask();
         setRunningTime(taskDuration * 60);
-        updateTaskStatus(taskId, isCompleted);
+        updateTaskStatus();
     }
 
     useEffect(() => {
@@ -35,30 +36,31 @@ export const ListItem = ({
         }
     }, [isRunning])
 
-    const handleResetTask = () => {
-        updateRunningStatus(taskId, isRunning);
+    const handleResetTaskAndRunningTime = () => {
+        resetTask(taskId);
         setRunningTime(taskDuration * 60);
     };
 
     return (
         <div 
-           className={"list-task"}
-           style={{
-              backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url(${isCompleted ? 'https://elements-resized.envatousercontent.com/envato-dam-assets-production/EVA/TRX/3e/4e/52/d7/6e/v1_E10/E10JODNM.jpg?w=1000&cf_fit=scale-down&mark-alpha=18&mark=https%3A%2F%2Felements-assets.envato.com%2Fstatic%2Fwatermark4.png&q=85&format=auto&s=c821a10aa9ad7616cab1f0775ddbf674c277d49dc3001bce999182d079db9a8e' : 'https://cdn.pixabay.com/photo/2016/11/22/23/09/fountain-pen-1851096_1280.jpg'})`
-           }}>
+           className={isCompleted ? 'list-task bg-task-completed' : 'list-task bg-task-uncompleted'}>
            <video autoPlay muted loop playsInline className={isRunning ? 'block' : 'hidden'}>
               <source src={`${videos[Math.floor(Math.random() * videos.length)].videos.medium.url}`} typeof="video/mp4" />
            </video>
 
-           <div className={isRunning ? "content" : ''}>
+           <div className={isRunning ? "content text-wrap" : 'bg-task-not-running text-wrap'}>
                <h2 className={
-                  isCompleted ? 'jersey-10-charted-regular done-task' :
-                  isRunning ? 'running-task jersey-10-charted-regular' :
-               'jersey-10-charted-regular text-cyan-500'
+                  isCompleted ? 'jersey-10-charted-regular task-name-done' :
+                  isRunning ? 'task-name-running jersey-10-charted-regular' :
+               'task-name-not-running jersey-10-charted-regular'
                }>{taskName}</h2>
-   
+
                <div className={"container-btn"}>
-                   <button className={isCompleted ? 'border border-red-600 text-red-600' : 'bg-green-300'} onClick={updateTaskStatus}>{isCompleted ? 'UnDone Task ❌' : 'Done Task ✅'}</button>
+                   <button className={isCompleted ? 'border border-red-600 text-red-600' : 'bg-green-300'} onClick={() => {
+                       updateTaskStatus();
+                       setRunningTime(taskDuration * 60);
+                       resetTask();
+                   }}>{isCompleted ? 'UnDone Task ❌' : 'Done Task ✅'}</button>
    
                    <button className={
                       isRunning ? 'bg-red-300' : 
@@ -70,7 +72,7 @@ export const ListItem = ({
                       'Start task ▶️'}
                    </button>
    
-                   <button className={"reset-task-btn"} onClick={handleResetTask}>Reset Task🔄</button>
+                   <button className={"reset-task-btn"} onClick={handleResetTaskAndRunningTime}>Reset Task🔄</button>
    
                    <button className={"remove-task-btn"} onClick={removeTask}>Remove Task⛔</button>
                </div>

@@ -58,25 +58,33 @@ h1::after {
 }
 
 .container {
-  @apply p-6 shadow-2xl rounded-2xl mt-6 flex flex-col justify-center items-center h-auto gap-2;
+  @apply p-6 shadow-2xl rounded-2xl mt-6 flex flex-col justify-center items-center h-auto gap-2 w-4xl;
    background: linear-gradient(to bottom right, oklch(90.5% 0.182 98.111), oklch(83.7% 0.128 66.29), oklch(65.6% 0.241 354.308));
 }
 
 .task-container {
-   @apply flex
+   @apply flex w-full items-center justify-between gap-4 min-w-0;
 }
 
 .task-number {
-   @apply flex text-center items-center;
+   @apply flex text-center items-center shrink-0;
 }
 
 .task-number span {
    color: #00ff00;
-   @apply block rounded-md text-9xl -m-8;
+   @apply block rounded-md text-9xl -m-10 -ml-4 select-none;
+}
+
+.bg-task-completed {
+    background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('https://elements-resized.envatousercontent.com/envato-dam-assets-production/EVA/TRX/3e/4e/52/d7/6e/v1_E10/E10JODNM.jpg?w=1000&cf_fit=scale-down&mark-alpha=18&mark=https%3A%2F%2Felements-assets.envato.com%2Fstatic%2Fwatermark4.png&q=85&format=auto&s=c821a10aa9ad7616cab1f0775ddbf674c277d49dc3001bce999182d079db9a8e');
+}
+
+.bg-task-uncompleted {
+    background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('https://cdn.pixabay.com/photo/2016/11/22/23/09/fountain-pen-1851096_1280.jpg');
 }
 
 .list-task {
-  @apply mb-5 p-4 rounded-lg shadow-xl relative overflow-hidden flex justify-center items-center h-50 bg-cover bg-center bg-no-repeat relative;
+  @apply mb-5 p-4 rounded-lg shadow-xl relative overflow-hidden flex justify-center items-center h-50 bg-cover bg-center bg-no-repeat;
 }
 
 .list-task h2 {
@@ -92,7 +100,7 @@ h1::after {
 }
 
 .container-btn {
-  @apply mb-5 p-4 rounded-md flex justify-center items-center w-full gap-2;
+  @apply mb-5 p-4 rounded-md flex justify-center items-center w-full gap-2 flex-wrap;
 }
 
 button {
@@ -114,7 +122,6 @@ button {
     font-family: 'Digital7', sans-serif;
     color: #00ff00; 
     background-color: #111; 
-    font-family: 'Digital7', sans-serif;
     @apply text-2xl w-fit py-1 px-2 rounded-md;
 }
 
@@ -131,11 +138,31 @@ button {
    @apply font-serif italic text-base text-green-900 tracking-wide;
 }
 
-.done-task {
-   @apply line-through text-red-500 italic
+.task-name-done {
+    @apply line-through text-red-600 italic
 }
 
-.running-task {
+.task-name-running {
    background: rgba(255, 255, 255, 0.6);
-   @apply w-fit text-center m-auto text-cyan-400 px-2 text-shadow-2xs text-shadow-pink-500 rounded-md shadow-2xl
+   @apply w-fit text-center m-auto text-cyan-400 px-2 text-shadow-2xs text-shadow-pink-500 rounded-md shadow-2xl break-all max-w-full;
+}
+
+.task-name-not-running {
+    @apply text-cyan-500 break-all;
+}
+
+@media (max-width: 600px) {
+    h1 {
+        @apply text-2xl;
+    }
+    .container {
+        @apply w-full;
+    }
+    button {
+        @apply font-medium text-xs;
+    }
+}
+
+@media (max-width: 600px) {
+
 }

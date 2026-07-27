@@ -1,8 +1,7 @@
 import React, {useState, useEffect} from "react";
-import {createTask, getAllTasks, updateTaskStatus, updateRunningStatus, removeTask} from "./appwrite";
+import {createTask, getAllTasks, updateTaskStatus, updateRunningStatus, resetTask, removeTask} from "./appwrite";
 import {ListItem} from "./components/ListItem";
 import {getListVideos} from "./pixabayVideos";
-
 import './App.css';
 
 function App() {
@@ -14,30 +13,63 @@ function App() {
          const data = await getListVideos();
          setVideos(data);
       } catch (error) {
-         alert(error);
+         console.log(error);
       }
    };
-
-   useEffect(() => {
-      loadVideos();
-   }, [videos])
 
    const loadAllTasks = async () => {
       try {
          const data = await getAllTasks();
          setTasks(data);
       } catch (error) {
-         alert(error);
+         console.log(error);
       }
    };
 
    useEffect(() => {
-      loadAllTasks();
-   }, [tasks])
-      
+      loadVideos().catch(console.error);
+      loadAllTasks().catch(console.error);
+   }, [])
+
+    const handleCreateTask = async () => {
+       try {
+            const newTask = await createTask();
+
+            if (newTask) {
+                setTasks((prevTasks) => [
+                    ...prevTasks,
+                    newTask
+                ])
+            } else {
+                await loadAllTasks();
+            }
+       } catch (error) {
+           console.log(error);
+       }
+    };
+
+    const handleUpdateTaskStatus = async (id, isCompleted, isRunning) => {
+       await updateTaskStatus(id, isCompleted, isRunning);
+       await loadAllTasks();
+    };
+
+    const handleUpdateRunningStatus = async (id, isRunning) => {
+        await updateRunningStatus(id, isRunning);
+        await loadAllTasks();
+    };
+
+    const handleResetTask = async (id) => {
+        await resetTask(id);
+        await loadAllTasks();
+    };
+
+    const handleRemoveTask = async (id, taskName) => {
+        await removeTask(id, taskName);
+        await loadAllTasks();
+    }
+
     return (
         <div>
-           {/* <p>{videos[0].id}</p> */}
             <h1>
                <span className="text-green-700">
                   📚 Task Tracker
@@ -53,7 +85,7 @@ function App() {
                  <h3 className="text-4xl font-bold honk-system-ui">
                     My Tasks
                  </h3>
-                 <button className={"add-task-btn"} onClick={createTask}>Add New Task 📝</button>
+                 <button className={"add-task-btn"} onClick={handleCreateTask}>Add New Task 📝</button>
               </div>
                {
                  tasks.length === 0 ?
@@ -74,16 +106,17 @@ function App() {
                                {index + 1}
                             </span>
                          </div>
-                        <ListItem 
+                        <ListItem
                            taskId={item.$id}
                            taskName={item.taskName}
                            isCompleted={item.isCompleted}
                            isRunning={item.isRunning}
                            taskDuration={item.taskDuration}
                            videos={videos}
-                           updateTaskStatus={() => updateTaskStatus(item.$id, item.isCompleted, item.isRunning)}
-                           updateRunningStatus={() => updateRunningStatus(item.$id, item.isRunning)}
-                           removeTask={() => removeTask(item.$id, item.taskName)}
+                           updateTaskStatus={() => handleUpdateTaskStatus(item.$id, item.isCompleted, item.isRunning)}
+                           updateRunningStatus={() => handleUpdateRunningStatus(item.$id, item.isRunning)}
+                           resetTask={() => handleResetTask(item.$id)}
+                           removeTask={() => handleRemoveTask(item.$id, item.taskName)}
                         />
                       </div>
                    ))

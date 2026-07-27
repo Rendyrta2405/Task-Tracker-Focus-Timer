@@ -7,15 +7,14 @@ export const getListVideos = async () => {
       const response = await fetch(url);
 
       if (!response.ok) {
-         alert("Failed to fetch videos")
+         console.log("Failed to fetch videos")
       }
 
       const data = await response.json();
       return data.hits;
    } catch (error) {
-      alert(error);
-      alert('Failed when fetching videos data from Pixabay', error);
-
+      // console.log(error);
+      console.log('Failed when fetching videos data from Pixabay', error);
       return [];
    }
 };
