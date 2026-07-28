@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from "react";
-import {createTask, getAllTasks, updateTaskStatus, updateRunningStatus, resetTask, removeTask} from "./appwrite";
+import {createTask, getAllTasks, updateTaskStatus, updateRunningStatus, updateStartTime, resetTask, removeTask} from "./appwrite";
 import {ListItem} from "./components/ListItem";
 import {getListVideos} from "./pixabayVideos";
 import './App.css';
@@ -7,7 +7,7 @@ import './App.css';
 function App() {
    const [tasks, setTasks] = useState([]);
    const [videos, setVideos] = useState([]);
-   // const [loadingTasks, setLoadingTasks] = useState(false);
+   const [loadingTasks, setLoadingTasks] = useState(false);
 
    const loadVideos = async () => {
       try {
@@ -20,10 +20,13 @@ function App() {
 
    const loadAllTasks = async () => {
       try {
+          setLoadingTasks(true);
          const data = await getAllTasks();
          setTasks(data);
       } catch (error) {
          alert(error);
+      } finally {
+          setLoadingTasks(false);
       }
    };
 
@@ -63,7 +66,7 @@ function App() {
           await updateTaskStatus(id, isCompleted, isRunning);
        } catch (error) {
           alert(error);
-          loadAllTasks();
+          loadAllTasks().catch(console.error);
        }
     };
 
@@ -78,21 +81,27 @@ function App() {
        )
        
         await updateRunningStatus(id, isRunning);
-        await loadAllTasks();
+        await loadAllTasks().catch(console.error);
     };
+
+    const handleUpdateStartTime = async (id) => {
+        await updateStartTime(id);
+        await loadAllTasks();
+    }
 
     const handleResetTask = async (id) => {
         await resetTask(id);
-        await loadAllTasks();
+        await loadAllTasks().catch(console.error);
     };
 
     const handleRemoveTask = async (id, taskName) => {
         await removeTask(id, taskName);
-        await loadAllTasks();
-    }
+        await loadAllTasks().catch(console.error);
+    };
 
     return (
         <div>
+            <button onClick={handleUpdateStartTime}>Set Start Time </button>
             <h1>
                <span className="text-green-700">
                   📚 Task Tracker
@@ -130,7 +139,6 @@ function App() {
                             </span>
                          </div>
                         <ListItem
-                           taskId={item.$id}
                            taskName={item.taskName}
                            isCompleted={item.isCompleted}
                            isRunning={item.isRunning}
@@ -138,6 +146,7 @@ function App() {
                            videos={videos}
                            updateTaskStatus={() => handleUpdateTaskStatus(item.$id, item.isCompleted, item.isRunning)}
                            updateRunningStatus={() => handleUpdateRunningStatus(item.$id, item.isRunning)}
+                           updateStartTime={() => handleUpdateStartTime(item.$id)}
                            resetTask={() => handleResetTask(item.$id)}
                            removeTask={() => handleRemoveTask(item.$id, item.taskName)}
                         />

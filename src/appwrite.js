@@ -2,18 +2,18 @@ import {Client, Databases, ID} from "appwrite";
 
 const PROJECT_ID = import.meta.env.VITE_APPWRITE_PROJECT_ID;
 const DATABASE_ID = import.meta.env.VITE_APPWRITE_DATABASE_ID;
-const COLLECTION_ID = import.meta.env.VITE_APPWRITE_COLLECTION_ID;
+const TABLE_ID = import.meta.env.VITE_APPWRITE_TABLE_ID;
 
 const client = new Client()
  .setEndpoint('https://sgp.cloud.appwrite.io/v1')
  .setProject(PROJECT_ID)
 
-const databases = new Databases(client);
+const tablesDB = new tablesDB(client);
 
 export const getAllTasks = async () => {
    try {
-      const response = await databases.listDocuments(DATABASE_ID, COLLECTION_ID);
-      return response.documents;
+      const response = await tablesDB.listRows(DATABASE_ID, TABLE_ID);
+      return response.rows;
    } catch (error) {
       console.log('Failed fetching tasks', error);
    }
@@ -21,12 +21,12 @@ export const getAllTasks = async () => {
 
 export const createTask = async () => {
    try {
-      const response = await databases.createDocument(
+      const response = await tablesDB.createRow(
          DATABASE_ID,
-         COLLECTION_ID,
+         TABLE_ID,
          ID.unique(),
          {
-            taskName: prompt('Enter Task Name: ',),
+            taskName: prompt('Enter Task Name (Max 255 characters long): ',),
             taskDuration: parseInt(prompt('Enter Task Duration In Minutes (Optional): ')) || 5,
          }
       );
@@ -39,9 +39,9 @@ export const createTask = async () => {
 
 export const updateTaskStatus = async (taskId, isCompleted, isRunning) => {
    try {
-      const response = await databases.updateDocument(
+      const response = await tablesDB.updateRow(
          DATABASE_ID,
-         COLLECTION_ID,
+         TABLE_ID,
          taskId,
          {
             isCompleted: !isCompleted,
@@ -55,9 +55,9 @@ export const updateTaskStatus = async (taskId, isCompleted, isRunning) => {
 
 export const updateRunningStatus = async (taskId, isRunning) => {
    try {
-      const response = await databases.updateDocument(
+      const response = await tablesDB.updateRow(
          DATABASE_ID,
-         COLLECTION_ID,
+         TABLE_ID,
          taskId,
          {
             isRunning: !isRunning,
@@ -68,11 +68,28 @@ export const updateRunningStatus = async (taskId, isRunning) => {
    }
 }
 
+export const updateStartTime = async (taskId) => {
+   try {
+      const response = await tablesDB.updateRow(
+          DATABASE_ID,
+          TABLE_ID,
+          taskId,
+          {
+             isRunning: true,
+             startTime: Date.now(),
+          }
+      );
+      return response.startTime;
+   } catch (error) {
+      console.log("Failed update startTime", error);
+   }
+}
+
 export const resetTask = async (taskId) => {
    try {
-      const response = await databases.updateDocument(
+      const response = await tablesDB.updateRow(
           DATABASE_ID,
-          COLLECTION_ID,
+          TABLE_ID,
           taskId,
           {
              isRunning: false,
@@ -89,9 +106,9 @@ export const removeTask = async (taskId, taskName) => {
 
       if (!confirmed) return;
       
-      const response = await databases.deleteDocument(
+      const response = await tablesDB.deleteRow(
          DATABASE_ID,
-         COLLECTION_ID,
+         TABLE_ID,
          taskId
       );
    } catch (error) {
