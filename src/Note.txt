@@ -1,0 +1,49 @@
+Membuat aplikasi "Task Tracker & Focus Timer" (Aplikasi Pengelola Tugas + Timer Pomodoro).Proyek
+
+Spesifikasi Fitur Proyek:
+
+Anda diminta untuk membuat aplikasi satu halaman (Single Page Application) yang memiliki fitur berikut:
+    Manajemen Tugas (CRUD Sederhana)
+    Menambahkan tugas baru ke dalam daftar.
+    Menampilkan daftar tugas yang sudah dibuat.
+    Menandai tugas sebagai "Selesai" (mengubah statusnya).
+    Menghapus tugas dari daftar.
+    Timer Pomodoro (Focus Timer)
+    Tombol untuk memulai, menjeda (pause), dan mengatur ulang (reset) timer 25 menit.
+    Ketika waktu habis, tampilkan notifikasi sederhana (misalnya teks "Waktu Fokus Selesai!").
+    Sinkronisasi Tugas Aktif
+    Pengguna bisa memilih salah satu tugas dari daftar untuk dipasangkan ke Timer.
+    Tugas yang dipilih akan tampil sebagai "Tugas yang Sedang Dikerjakan" di atas timer.💡
+
+ Anda wajib menerapkan konsep-konsep berikut di dalam kode Anda:
+    useState: Digunakan untuk menyimpan array daftar tugas, status timer (menit & detik), dan tugas yang sedang aktif.
+    useEffect: Digunakan untuk menjalankan hitung mundur timer setiap detiknya (menggunakan setInterval) ketika timer dalam posisi aktif.
+
+    useEffect(() => {
+
+    }, []);
+
+    Jangan lupa menuliskan fungsi cleanup untuk membersihkan interval agar tidak terjadi kebocoran memori (memory leak).
+    State Immutability: Saat menambah atau mengubah status tugas, pastikan Anda menggunakan spread operator (...) dan tidak mengubah (mutate) array state secara langsung.
+    Keys pada List: Saat me-render daftar tugas menggunakan fungsi .map(), pastikan setiap elemen memiliki properti key yang unik (misalnya menggunakan id berbasis Date.now()).
+
+
+bebas menggunakan CSS murni atau framework seperti Tailwind CSS untuk tampilannya.
+Fokuskan terlebih dahulu pada fungsi dan logikanya agar berjalan dengan benar.
+
+addBtn
+render List
+toggleBtn
+DeleteBtn
+Element for display Timer
+StartBtn
+PauseBtn
+ResetTimerBtn
+Notif for time's up
+Button for Run play task
+
+
+
+
+
+
