@@ -11,7 +11,7 @@ import {
 } from "./appwrite";
 import {ListItem} from "./components/ListItem";
 import './App.css';
-f
+
 function App() {
    const [tasks, setTasks] = useState([]);
    const [videos, setVideos] = useState([]);
@@ -52,7 +52,6 @@ function App() {
             if (videos.length === 0) return null;
             return videos[Math.floor(Math.random() * videos.length)];
         };
-        console.log(selectedVideo());
         const urlVideo = selectedVideo().videos.medium.url;
 
        try {
@@ -90,34 +89,36 @@ function App() {
     };
 
     const handleStartTask = async (id) => {
+       const selectedTask = tasks.find(item => item.$id === id);
+       let taskDurationInSeconds = selectedTask.taskDuration * 60;
+       const startTime = Date.now();
+       
         setTasks((prevTasks) =>
             prevTasks.map((task) =>
                 task.$id === id ? {
                     ...task,
-                    isRunning: true
+                    isRunning: true,
+                    startTime: startTime
                 } : task
             )
         )
+       
+       setInterval(() => {
+          setTasks((prevTasks) => 
+             prevTasks.map((task) =>
+                task.$id === id ? {
+                   ...task,
+                   taskDurationInSeconds: taskDurationInSeconds--
+                } : task
+             )   
+          )
+       }, 1000)
 
         try {
-            await startTask(id);
+            await startTask(id, startTime);
         } catch (error) {
             console.log("Failed while handleStartTask with error:", error);
         }
-    }
-
-    const handleUpdateRunningStatus = async (id, isRunning) => {
-       setTasks((prevTasks) => 
-          prevTasks.map((task) => 
-             task.$id === id ? {
-                ...task,
-                isRunning: !isRunning
-             } : task
-          )
-       )
-       
-        await updateRunningStatus(id, isRunning);
-        await loadAllTasks().catch(console.error);
     };
 
     const handleResetTask = async (id) => {
@@ -173,6 +174,7 @@ function App() {
                            isCompleted={item.isCompleted}
                            isRunning={item.isRunning}
                            taskDuration={item.taskDuration}
+                           taskDurationInSeconds={item.taskDurationInSeconds}
                            videos={videos}
                            startTime={item.startTime}
                            updateTaskStatus={() => handleUpdateTaskStatus(item.$id, item.isCompleted, item.isRunning)}

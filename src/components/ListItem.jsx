@@ -5,6 +5,7 @@ export const ListItem = ({
    isCompleted,
    isRunning,
    taskDuration,
+   taskDurationInSeconds,
    videos,
    startTime,
    updateTaskStatus,
@@ -13,12 +14,27 @@ export const ListItem = ({
    resetTask,
    removeTask,
 }) => {
+   // D = 2:00 -> 120s
+   
+   // S = 7654321 -> 7654s
+   // user klik start. lalu pergi 1 mnt 
+   // waktu berjalan 1 menit...
+   // 120, 119, 118, 62, 61, 60, ...
+
+   // user balik 
+   // sisaWaktu = waktuSkrng - waktuMulai  
+   // sisaWaktu = 7714321 - 7654321 ->  60000ms -> 60s
+
+   // jalankan sisaWaktu..
+   // 60, 59, 58, 3, 2, 1, 0
+   
+   
     const intervalRef = useRef(null);
-    const TOTAL_DURATION = taskDuration * 60; //60
+    // const taskDurationInSeconds = taskDuration * 60; //60s
+    const timeInSeconds = Math.floor(taskDurationInSeconds % 60);
+    const timeInMinutes = Math.floor(taskDurationInSeconds / 60 % 60);
+    const timeInHours = Math.floor(taskDurationInSeconds / 3600);
     const elapsed = Math.floor((Date.now() - startTime) / 1000);
-    const timeInSeconds = Math.floor(elapsed % 60);
-    const timeInMinutes = Math.floor(elapsed / 60 % 60);
-    const timeInHours = Math.floor(elapsed / 3600);
 
     return (
         <div className={
@@ -71,7 +87,7 @@ export const ListItem = ({
 
               <div className="flex justify-center mt-3">
                 {
-                   // runningTime === taskDuration * 60 ? '' :
+                   !taskDurationInSeconds ? '' :
                      <span className={"timer"}>
                        {
                         timeInHours.toString().padStart(2, '0') +

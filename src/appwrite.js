@@ -57,15 +57,15 @@ export const updateTaskStatus = async (taskId, isCompleted, isRunning) => {
    }
 }
 
-export const startTask = async (taskId) => {
+export const startTask = async (taskId, startTime) => {
    try {
-      const response = tablesDB.updateRow({
+      const response = await tablesDB.updateRow({
          databaseId: DATABASE_ID,
          tableId: TABLE_ID,
          rowId: taskId,
          data: {
             isRunning: true,
-            startTime: Date.now(),
+            startTime: startTime,
          }
       })
    } catch (error) {
