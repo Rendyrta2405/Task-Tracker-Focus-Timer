@@ -1,64 +1,39 @@
 import { useState, useEffect, useRef, useMemo } from "react";
 
 export const ListItem = ({
-   taskId,
-   taskName, 
-   isCompleted, 
+   taskName,
+   isCompleted,
    isRunning,
-   taskDuration, 
+   taskDuration,
    videos,
+   startTime,
    updateTaskStatus,
+   startTask,
    updateRunningStatus,
    resetTask,
    removeTask,
 }) => {
-    const [runningTime, setRunningTime] = useState(taskDuration * 60);
     const intervalRef = useRef(null);
-    const timeInSeconds = Math.floor(runningTime % 60);
-    const timeInMinutes = Math.floor(runningTime / 60 % 60);
-    const timeInHours = Math.floor(runningTime / 3600);
-    const selectedVideo = useMemo(() => {
-       if (!videos || videos.length === 0) return null;
-       return videos[Math.floor(Math.random() * videos.length)];
-    }, [videos]);
-   
-    if (runningTime === 0) {
-        alert(`"${taskName}" task has complete 🎉 
-        Let's start a new task!`);
-        resetTask();
-        setRunningTime(taskDuration * 60);
-        updateTaskStatus();
-    }
-
-    useEffect(() => {
-        if (isRunning) {
-            intervalRef.current = setInterval(() => {
-                setRunningTime((prev) => prev - 1);
-            }, 1000);
-        } else {
-            clearInterval(intervalRef.current);
-        }
-    }, [isRunning])
-
-    const handleResetTaskAndRunningTime = () => {
-        resetTask();
-        setRunningTime(taskDuration * 60);
-    };
+    const TOTAL_DURATION = taskDuration * 60; //60
+    const elapsed = Math.floor((Date.now() - startTime) / 1000);
+    const timeInSeconds = Math.floor(elapsed % 60);
+    const timeInMinutes = Math.floor(elapsed / 60 % 60);
+    const timeInHours = Math.floor(elapsed / 3600);
 
     return (
         <div className={
-           isCompleted ? 'list-task bg-task-completed' : 
+           isCompleted ? 'list-task bg-task-completed' :
            'list-task bg-task-uncompleted'}>
-           
-           <video autoPlay muted loop playsInline 
-              className={isRunning ? 'running-video' : 'hidden'}>
-              {selectedVideo && 
-                 <source src={selectedVideo.videos.medium.url} type="video/mp4" />
-              }
-           </video>
+
+           {/*<video autoPlay muted loop playsInline*/}
+           {/*   className={isRunning ? 'running-video' : 'hidden'}>*/}
+           {/*   {selectedVideo &&*/}
+           {/*      <source src={selectedVideo.videos.medium.url} type="video/mp4" />*/}
+           {/*   }*/}
+           {/*</video>*/}
 
            <div className={ isRunning ? "content" : 'bg-task-not-running'}>
-               
+
                <h2 className={
                   isCompleted ? 'task-name-done jersey-10-charted-regular' :
                   isRunning ? 'task-name-running jersey-10-charted-regular' :
@@ -67,46 +42,42 @@ export const ListItem = ({
 
                <div className="container-btn">
                    <button className={
-                   isCompleted ? 'btn-task-completed' : 
-                   'bg-green-300'} 
+                   isCompleted ? 'btn-task-completed' :
+                   'bg-green-300'}
                       onClick={() => {
                        updateTaskStatus();
-                       setRunningTime(taskDuration * 60);
+                       // setRunningTime(taskDuration * 60);
                        resetTask();
                    }}>{
                    isCompleted ? 'UnDone Task ❌' : 'Done Task ✅'
                    }</button>
-   
-                   <button className={
-                      isRunning ? 'bg-red-300' : 
-                      isCompleted ? 'btn-disabled' : 
-                      'bg-blue-300'} 
-                      onClick={updateRunningStatus}>
-                      {isRunning ? 'Pause Task ⏸️' : 
-                        runningTime !== taskDuration * 60 ? 'Continue task ▶️' :
-                      'Start task ▶️'}
-                   </button>
-   
-                   <button className={"reset-task-btn"} 
-                      onClick={handleResetTaskAndRunningTime}>
-                      Reset Task🔄
-                   </button>
-   
-                   <button className={"remove-task-btn"} 
+
+                   {
+                       isRunning ?
+                           <button className={"bg-red-200"}>Pause Task ⏸️</button> :
+                           <button className="bg-blue-200" onClick={startTask}>Start Task ▶️</button>
+                   }
+
+                   {/*<button className={"reset-task-btn"}*/}
+                   {/*   onClick={handleResetTaskAndRunningTime}>*/}
+                   {/*   Reset Task🔄*/}
+                   {/*</button>*/}
+
+                   <button className={"remove-task-btn"}
                       onClick={removeTask}>
                       Remove Task⛔
                    </button>
                </div>
-   
+
               <div className="flex justify-center mt-3">
                 {
-                   runningTime === taskDuration * 60 ? '' :
+                   // runningTime === taskDuration * 60 ? '' :
                      <span className={"timer"}>
                        {
                         timeInHours.toString().padStart(2, '0') +
-                          ' : ' + 
-                        timeInMinutes.toString().padStart(2, '0') + 
-                          ' : ' + 
+                          ' : ' +
+                        timeInMinutes.toString().padStart(2, '0') +
+                          ' : ' +
                         timeInSeconds.toString().padStart(2, '0')
                         }
                      </span>

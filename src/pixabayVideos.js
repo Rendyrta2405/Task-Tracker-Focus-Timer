@@ -13,7 +13,6 @@ export const getListVideos = async () => {
       const data = await response.json();
       return data.hits;
    } catch (error) {
-      // console.log(error);
       console.log('Failed when fetching videos data from Pixabay', error);
       return [];
    }
