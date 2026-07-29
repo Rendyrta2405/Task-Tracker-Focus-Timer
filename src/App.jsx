@@ -1,7 +1,15 @@
 import React, {useState, useEffect} from "react";
-import {createTask, getAllTasks, updateTaskStatus, updateRunningStatus, updateStartTime, resetTask, removeTask} from "./appwrite";
-import {ListItem} from "./components/ListItem";
 import {getListVideos} from "./pixabayVideos";
+import {
+    createTask,
+    getAllTasks,
+    updateTaskStatus,
+    startTask,
+    updateRunningStatus,
+    resetTask,
+    removeTask
+} from "./appwrite";
+import {ListItem} from "./components/ListItem";
 import './App.css';
 
 function App() {
@@ -9,35 +17,46 @@ function App() {
    const [videos, setVideos] = useState([]);
    const [loadingTasks, setLoadingTasks] = useState(false);
 
-   const loadVideos = async () => {
-      try {
-         const data = await getListVideos();
-         setVideos(data);
-      } catch (error) {
-         console.log(error);
-      }
-   };
-
    const loadAllTasks = async () => {
       try {
           setLoadingTasks(true);
-         const data = await getAllTasks();
-         setTasks(data);
+          const data = await getAllTasks();
+          setTasks(data);
       } catch (error) {
-         alert(error);
+          alert(error);
       } finally {
           setLoadingTasks(false);
       }
    };
 
+    const loadAllVideos = async () => {
+        try {
+            const data = await getListVideos();
+            if (data) {
+                setVideos(data);
+            } else {
+                setVideos([]);
+            }
+        } catch (error) {
+            console.log("Failed while loadAllVideos with error:", error);
+        }
+    };
+
    useEffect(() => {
-      loadVideos().catch(console.error);
       loadAllTasks().catch(console.error);
+      loadAllVideos().catch(console.error);
    }, [])
 
     const handleCreateTask = async () => {
+        const selectedVideo = () => {
+            if (videos.length === 0) return null;
+            return videos[Math.floor(Math.random() * videos.length)];
+        };
+        console.log(selectedVideo());
+        const urlVideo = selectedVideo().videos.medium.url;
+
        try {
-            const newTask = await createTask();
+            const newTask = await createTask(urlVideo);
 
             if (newTask) {
                 setTasks((prevTasks) => [
@@ -70,6 +89,23 @@ function App() {
        }
     };
 
+    const handleStartTask = async (id) => {
+        setTasks((prevTasks) =>
+            prevTasks.map((task) =>
+                task.$id === id ? {
+                    ...task,
+                    isRunning: true
+                } : task
+            )
+        )
+
+        try {
+            await startTask(id);
+        } catch (error) {
+            console.log("Failed while handleStartTask with error:", error);
+        }
+    }
+
     const handleUpdateRunningStatus = async (id, isRunning) => {
        setTasks((prevTasks) => 
           prevTasks.map((task) => 
@@ -84,11 +120,6 @@ function App() {
         await loadAllTasks().catch(console.error);
     };
 
-    const handleUpdateStartTime = async (id) => {
-        await updateStartTime(id);
-        await loadAllTasks();
-    }
-
     const handleResetTask = async (id) => {
         await resetTask(id);
         await loadAllTasks().catch(console.error);
@@ -101,7 +132,6 @@ function App() {
 
     return (
         <div>
-            <button onClick={handleUpdateStartTime}>Set Start Time </button>
             <h1>
                <span className="text-green-700">
                   📚 Task Tracker
@@ -144,9 +174,10 @@ function App() {
                            isRunning={item.isRunning}
                            taskDuration={item.taskDuration}
                            videos={videos}
+                           startTime={item.startTime}
                            updateTaskStatus={() => handleUpdateTaskStatus(item.$id, item.isCompleted, item.isRunning)}
+                           startTask={() => handleStartTask(item.$id)}
                            updateRunningStatus={() => handleUpdateRunningStatus(item.$id, item.isRunning)}
-                           updateStartTime={() => handleUpdateStartTime(item.$id)}
                            resetTask={() => handleResetTask(item.$id)}
                            removeTask={() => handleRemoveTask(item.$id, item.taskName)}
                         />

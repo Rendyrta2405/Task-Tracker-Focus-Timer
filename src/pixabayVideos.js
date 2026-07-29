@@ -1,6 +1,6 @@
 export const getListVideos = async () => {
    const API_KEY = import.meta.env.VITE_PIXABAY_API_KEY;
-   const randomPage = Math.floor(Math.random() * 50)+ 1;
+   const randomPage = Math.floor(Math.random() * 20)+ 1;
    const url = `https://pixabay.com/api/videos/?key=${API_KEY}&page=${randomPage}`;
 
    try {
