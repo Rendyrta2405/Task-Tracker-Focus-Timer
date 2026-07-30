@@ -34,7 +34,7 @@ export const createTask = async (urlVideo) => {
             urlVideo: urlVideo,
          }
       });
-      console.log('Success create task', response);
+      // console.log('Success create task', response);
       return response;
    } catch (error) {
       console.log('Failed Create Task', error);

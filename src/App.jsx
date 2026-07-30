@@ -21,7 +21,6 @@ function App() {
           setLoadingTasks(true);
           const data = await getAllTasks();
           setTasks(data);
-          console.log(data[0]);
       } catch (error) {
           alert(error);
       } finally {
@@ -89,7 +88,7 @@ function App() {
     };
 
     const handleStartTask = async (id) => {
-       // const selectedTask = tasks.find(item => item.$id === id);
+       const selectedTask = tasks.find(item => item.$id === id);
        const startTime = Date.now();
        
         setTasks((prevTasks) =>
@@ -101,6 +100,8 @@ function App() {
                 } : task
             )
         )
+
+       console.log(selectedTask);
 
         try {
             await startTask(id, startTime);

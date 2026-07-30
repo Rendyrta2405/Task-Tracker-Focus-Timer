@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useMemo } from "react";
+import { useState, useEffect, useRef } from "react";
 
 export const ListItem = ({
    taskName,
@@ -13,32 +13,30 @@ export const ListItem = ({
    resetTask,
    removeTask,
 }) => {
-   // D = 2:00 -> 120s
-   
-   // S = 7654321 -> 7654s
-   // user klik start. lalu pergi 1 mnt 
-   // waktu berjalan 1 menit...
-   // 120, 119, 118, 62, 61, 60, ...
-
-   // user balik 
-   // sisaWaktu = waktuSkrng - waktuMulai  
-   // sisaWaktu = 7714321 - 7654321 ->  60000ms -> 60s
-
-   // jalankan sisaWaktu..
-   // 60, 59, 58, 3, 2, 1, 0
-
-    // console.log(taskDurationInSeconds)
-   
     const intervalRef = useRef(null);
-    const timeInSeconds = Math.floor(taskDurationInSeconds % 60);
-    const timeInMinutes = Math.floor(taskDurationInSeconds / 60 % 60);
-    const timeInHours = Math.floor(taskDurationInSeconds / 3600);
-    let remainingTime = taskDurationInSeconds;
+    const [remainingTime, setRemainingTime] = useState(taskDurationInSeconds);
 
-    if (isRunning && startTime) {
-        const elapsed = Math.floor((Date.now() - startTime) / 1000);
-        remainingTime = Math.max(0, taskDurationInSeconds - elapsed);
-    }
+   useEffect(() => {
+      if (!runningTask && !startTime) return;
+
+      intervalRef.current = setInterval(() => {
+         const elapsed = Math.floor((Date.now() - startTime)) / 1000;
+         const remaining = Math.max(0, remainingTime - elapsed);
+         setRemainingTime(remaining);
+
+         if (remainingTime <= 0) {
+            clearInterval(intervalRef.current);
+            alert(`${taskName} has completed!`);
+         }
+      }, 1000)
+
+      return () => clearInterval(intervalRef.current);
+   }, [isRunning, startTime, taskDurationInSeconds])
+    
+   
+    const timeInHours = Math.floor(remainingTime / 3600);
+    const timeInMinutes = Math.floor((remainingTime % 3600) / 60);
+    const timeInSeconds = Math.floor(remainingTime % 60);
 
     return (
         <div className={
