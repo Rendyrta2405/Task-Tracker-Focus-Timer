@@ -4,13 +4,12 @@ export const ListItem = ({
    taskName,
    isCompleted,
    isRunning,
-   taskDuration,
    taskDurationInSeconds,
    videos,
    startTime,
+   runningTask,
    updateTaskStatus,
    startTask,
-   updateRunningStatus,
    resetTask,
    removeTask,
 }) => {
@@ -27,14 +26,19 @@ export const ListItem = ({
 
    // jalankan sisaWaktu..
    // 60, 59, 58, 3, 2, 1, 0
-   
+
+    // console.log(taskDurationInSeconds)
    
     const intervalRef = useRef(null);
-    // const taskDurationInSeconds = taskDuration * 60; //60s
     const timeInSeconds = Math.floor(taskDurationInSeconds % 60);
     const timeInMinutes = Math.floor(taskDurationInSeconds / 60 % 60);
     const timeInHours = Math.floor(taskDurationInSeconds / 3600);
-    const elapsed = Math.floor((Date.now() - startTime) / 1000);
+    let remainingTime = taskDurationInSeconds;
+
+    if (isRunning && startTime) {
+        const elapsed = Math.floor((Date.now() - startTime) / 1000);
+        remainingTime = Math.max(0, taskDurationInSeconds - elapsed);
+    }
 
     return (
         <div className={
@@ -62,7 +66,6 @@ export const ListItem = ({
                    'bg-green-300'}
                       onClick={() => {
                        updateTaskStatus();
-                       // setRunningTime(taskDuration * 60);
                        resetTask();
                    }}>{
                    isCompleted ? 'UnDone Task ❌' : 'Done Task ✅'
@@ -87,7 +90,7 @@ export const ListItem = ({
 
               <div className="flex justify-center mt-3">
                 {
-                   !taskDurationInSeconds ? '' :
+                   // !taskDurationInSeconds ? '' :
                      <span className={"timer"}>
                        {
                         timeInHours.toString().padStart(2, '0') +

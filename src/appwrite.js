@@ -30,7 +30,7 @@ export const createTask = async (urlVideo) => {
          rowId: ID.unique(),
          data: {
             taskName: prompt('Enter Task Name (Max 255 characters long):'),
-            taskDuration: parseInt(prompt('Enter Task Duration In Minutes (Optional):')),
+            taskDurationInSeconds: parseInt(prompt('Enter Task Duration In Minutes (Optional):')) * 60,
             urlVideo: urlVideo,
          }
       });

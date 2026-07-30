@@ -5,7 +5,6 @@ import {
     getAllTasks,
     updateTaskStatus,
     startTask,
-    updateRunningStatus,
     resetTask,
     removeTask
 } from "./appwrite";
@@ -22,6 +21,7 @@ function App() {
           setLoadingTasks(true);
           const data = await getAllTasks();
           setTasks(data);
+          console.log(data[0]);
       } catch (error) {
           alert(error);
       } finally {
@@ -89,8 +89,7 @@ function App() {
     };
 
     const handleStartTask = async (id) => {
-       const selectedTask = tasks.find(item => item.$id === id);
-       let taskDurationInSeconds = selectedTask.taskDuration * 60;
+       // const selectedTask = tasks.find(item => item.$id === id);
        const startTime = Date.now();
        
         setTasks((prevTasks) =>
@@ -98,27 +97,29 @@ function App() {
                 task.$id === id ? {
                     ...task,
                     isRunning: true,
-                    startTime: startTime
+                    startTime: startTime,
                 } : task
             )
         )
-       
-       setInterval(() => {
-          setTasks((prevTasks) => 
-             prevTasks.map((task) =>
-                task.$id === id ? {
-                   ...task,
-                   taskDurationInSeconds: taskDurationInSeconds--
-                } : task
-             )   
-          )
-       }, 1000)
 
         try {
             await startTask(id, startTime);
         } catch (error) {
             console.log("Failed while handleStartTask with error:", error);
         }
+    };
+
+    const handleRunningTask = (id) => {
+        const selectedTask = tasks.find((task) => task.$id === id);
+
+        // setTasks((prevTasks) =>
+        //     prevTasks.map((task) =>
+        //         task.$id === id ? {
+        //             ...task,
+        //             taskDurationInSeconds: selectedTask.durationInSeconds - 1
+        //         } : task
+        //     )
+        // )
     };
 
     const handleResetTask = async (id) => {
@@ -173,13 +174,12 @@ function App() {
                            taskName={item.taskName}
                            isCompleted={item.isCompleted}
                            isRunning={item.isRunning}
-                           taskDuration={item.taskDuration}
                            taskDurationInSeconds={item.taskDurationInSeconds}
                            videos={videos}
                            startTime={item.startTime}
+                           runningTask={() => handleRunningTask(item.$id)}
                            updateTaskStatus={() => handleUpdateTaskStatus(item.$id, item.isCompleted, item.isRunning)}
                            startTask={() => handleStartTask(item.$id)}
-                           updateRunningStatus={() => handleUpdateRunningStatus(item.$id, item.isRunning)}
                            resetTask={() => handleResetTask(item.$id)}
                            removeTask={() => handleRemoveTask(item.$id, item.taskName)}
                         />
