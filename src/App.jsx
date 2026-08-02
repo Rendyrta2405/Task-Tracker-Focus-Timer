@@ -51,8 +51,11 @@ function App() {
          const taskName = prompt('Enter Task Name (Max 255 characters long):');
          if (!taskName) return;
        
-         const totalDurationInSeconds = parseInt(prompt('Enter Task Duration In Minutes:')) * 60;
+         const totalDurationInSeconds = parseInt(prompt('Enter Task Duration In Minutes (Max: 1440 minutes):')) * 60;
          if (!totalDurationInSeconds) return;
+         if (totalDurationInSeconds > 86400) {
+            return alert('Task duration must not exceed 1.440 minutes. Try again');
+         }
        
         const selectedVideo = () => {
             if (videos.length === 0) return null;
