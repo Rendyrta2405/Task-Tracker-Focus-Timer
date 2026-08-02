@@ -27,6 +27,7 @@ export const ListItem = ({
       if (!isRunning && !isCompleted && !startTime) {
          setRemainingTime(totalDurationInSeconds);
          clearInterval(intervalRef.current);
+         resetTask();
          return;
       }
       
@@ -38,7 +39,8 @@ export const ListItem = ({
          setRemainingTime(remaining);
 
          if (remaining <= 0) {
-            alert(`${taskName} has completed!`);
+            alert(`"${taskName}" task has completed 🥳
+Let's start a new task and get it finished 🔥`);
             clearInterval(intervalRef.current);
             setRemainingTime(totalDurationInSeconds);
             updateTaskStatus();
@@ -46,7 +48,7 @@ export const ListItem = ({
       }, 1000)
 
       return () => clearInterval(intervalRef.current);
-   }, [isRunning, isCompleted])
+   }, [isRunning, isCompleted, startTime])
     
    
     const timeInHours = Math.floor(remainingTime / 3600);
