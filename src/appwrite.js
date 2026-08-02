@@ -22,16 +22,16 @@ export const getAllTasks = async () => {
    }
 }
 
-export const createTask = async (urlVideo) => {
+export const createTask = async (taskName, totalDurationInSeconds, urlVideo) => {   
    try {
       const response = await tablesDB.createRow({
          databaseId: DATABASE_ID,
          tableId: TABLE_ID,
          rowId: ID.unique(),
          data: {
-            taskName: prompt('Enter Task Name (Max 255 characters long):'),
-            taskDurationInSeconds: parseInt(prompt('Enter Task Duration In Minutes (Optional):')) * 60,
-            urlVideo: urlVideo,
+            taskName: taskName[0].toUpperCase() + taskName.slice(1),
+            totalDurationInSeconds,
+            urlVideo,
          }
       });
       // console.log('Success create task', response);
@@ -50,10 +50,11 @@ export const updateTaskStatus = async (taskId, isCompleted, isRunning) => {
          data: {
             isCompleted: !isCompleted,
             isRunning: isRunning ? !isRunning : isRunning,
+            startTime: 0,
          }
       });
    } catch (error) {
-      console.log(error);
+      console.log("Failed while updateTaskStatus with error:", error);
    }
 }
 
@@ -69,22 +70,22 @@ export const startTask = async (taskId, startTime) => {
          }
       })
    } catch (error) {
-      console.log('Failed while startTask with error:', taskId);
+      console.log('Failed while startTask with error:', error);
    }
 }
 
-export const updateRunningStatus = async (taskId, isRunning) => {
+export const pauseTask = async (taskId) => {
    try {
       const response = await tablesDB.updateRow({
          databaseId: DATABASE_ID,
          tableId: TABLE_ID,
          rowId: taskId,
          data: {
-            isRunning: !isRunning,
+            isRunning: false,
          }
-      });
+      })
    } catch (error) {
-      console.log(error);
+      console.log('Failed while pauseTask with error:', error);
    }
 }
 
@@ -96,10 +97,12 @@ export const resetTask = async (taskId) => {
          rowId: taskId,
          data: {
             isRunning: false,
+            isCompleted: false,
+            startTime: 0
          }
       });
    } catch (error) {
-      console.log('Failed reset task', error);
+      console.log('Failed while resetTask with error:', error);
    }
 }
 

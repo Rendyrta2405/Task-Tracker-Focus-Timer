@@ -5,6 +5,7 @@ import {
     getAllTasks,
     updateTaskStatus,
     startTask,
+    pauseTask,
     resetTask,
     removeTask
 } from "./appwrite";
@@ -47,6 +48,12 @@ function App() {
    }, [])
 
     const handleCreateTask = async () => {
+         const taskName = prompt('Enter Task Name (Max 255 characters long):');
+         if (!taskName) return;
+       
+         const totalDurationInSeconds = parseInt(prompt('Enter Task Duration In Minutes:')) * 60;
+         if (!totalDurationInSeconds) return;
+       
         const selectedVideo = () => {
             if (videos.length === 0) return null;
             return videos[Math.floor(Math.random() * videos.length)];
@@ -54,18 +61,14 @@ function App() {
         const urlVideo = selectedVideo().videos.medium.url;
 
        try {
-            const newTask = await createTask(urlVideo);
+          const newTask = await createTask(taskName, totalDurationInSeconds, urlVideo);
 
-            if (newTask) {
-                setTasks((prevTasks) => [
-                    ...prevTasks,
-                    newTask
-                ])
-            } else {
-                await loadAllTasks();
-            }
+          setTasks((prevTasks) => [
+             ...prevTasks,
+             newTask
+          ])
        } catch (error) {
-           console.log(error);
+           console.log("Failed while handleCreateTask with error:", error);
        }
     };
 
@@ -74,7 +77,9 @@ function App() {
           prevTasks.map((task) => 
              task.$id === id ? {
                 ...task,
-                isCompleted: !isCompleted
+                isCompleted: !isCompleted,
+                isRunning: isRunning ? !isRunning : isRunning,
+                startTime: 0,
              } : task
           )
        )
@@ -88,7 +93,7 @@ function App() {
     };
 
     const handleStartTask = async (id) => {
-       const selectedTask = tasks.find(item => item.$id === id);
+       // const selectedTask = tasks.find(item => item.$id === id);
        const startTime = Date.now();
        
         setTasks((prevTasks) =>
@@ -101,7 +106,7 @@ function App() {
             )
         )
 
-       console.log(selectedTask);
+       // console.log(startTime);
 
         try {
             await startTask(id, startTime);
@@ -109,23 +114,41 @@ function App() {
             console.log("Failed while handleStartTask with error:", error);
         }
     };
+   
+    const handlePauseTask = async (id) => {
+        setTasks((prevTasks) =>
+            prevTasks.map((task) =>
+                task.$id === id ? {
+                    ...task,
+                    isRunning: false,
+                } : task
+            )
+        )
 
-    const handleRunningTask = (id) => {
-        const selectedTask = tasks.find((task) => task.$id === id);
-
-        // setTasks((prevTasks) =>
-        //     prevTasks.map((task) =>
-        //         task.$id === id ? {
-        //             ...task,
-        //             taskDurationInSeconds: selectedTask.durationInSeconds - 1
-        //         } : task
-        //     )
-        // )
+        try {
+            await pauseTask(id);
+        } catch (error) {
+            console.log("Failed while handlePauseTask with error:", error);
+        }
     };
 
     const handleResetTask = async (id) => {
-        await resetTask(id);
-        await loadAllTasks().catch(console.error);
+         setTasks((prevTasks) => 
+            prevTasks.map((task) => 
+               task.$id === id ? {
+                  ...task,
+                  isRunning: false,
+                  isCompleted: false,
+                  startTime: 0
+               } : task
+            )   
+         )
+
+        try {
+           await resetTask(id);
+        } catch (error) {
+           console.log("Failed while handleResetTask with error:", error)
+        }
     };
 
     const handleRemoveTask = async (id, taskName) => {
@@ -156,12 +179,15 @@ function App() {
                  tasks.length === 0 ?
                     <div className={"empty-task"}>
                        <h3>You don't have any task yet ☹️</h3>
-                       <p>Go ahead and create a new task—and get it done 🔥</p>
+                       <p>Go ahead, create a new task—and get it done 🔥</p>
                     </div>
                  : ''
                }
               
                {
+                  loadingTasks ? (
+                     <img src="/loading/loading.gif" alt="loading..." className="loading-tasks" />
+                  ) : 
                    tasks.map((item, index) => (
                       <div 
                          key={item.$id}  
@@ -175,10 +201,11 @@ function App() {
                            taskName={item.taskName}
                            isCompleted={item.isCompleted}
                            isRunning={item.isRunning}
-                           taskDurationInSeconds={item.taskDurationInSeconds}
-                           videos={videos}
+                           totalDurationInSeconds={item.totalDurationInSeconds}
+                           urlVideo={item.urlVideo}
                            startTime={item.startTime}
                            runningTask={() => handleRunningTask(item.$id)}
+                           pauseTask={() => handlePauseTask(item.$id)}
                            updateTaskStatus={() => handleUpdateTaskStatus(item.$id, item.isCompleted, item.isRunning)}
                            startTask={() => handleStartTask(item.$id)}
                            resetTask={() => handleResetTask(item.$id)}

@@ -71,8 +71,7 @@ h1::after {
 }
 
 .task-number span {
-   color: #00ff00;
-   @apply block rounded-md text-9xl -m-10 -ml-4 select-none;
+   @apply block rounded-md text-[12rem] -m-20 -ml-4 select-none text-green-300;
 }
 
 .bg-task-completed {
@@ -165,6 +164,10 @@ button {
 
 .btn-disabled {
    @apply pointer-events-none bg-gray-300 text-gray-500 opacity-60;
+}
+
+.loading-tasks {
+   @apply rounded-2xl h-80 w-full;
 }
 
 @media (max-width: 600px) {
