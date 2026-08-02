@@ -1,31 +1,109 @@
 @import "tailwindcss";
 
+.tourney-sans-serif {
+  font-family: "Tourney", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 500;
+  font-style: italic;
+  font-variation-settings:
+    "wdth" 125;
+}
+
+.honk-system-ui {
+  font-family: "Honk", system-ui;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-style: normal;
+  font-variation-settings:
+    "MORF" 15,
+    "SHLN" 50;
+}
+
+.jersey-10-charted-regular {
+  font-family: "Jersey 10 Charted", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+}
+
+
+/* Timer Font (download) */
+
+@font-face {
+    font-family: 'Digital7';
+    src: url('fonts/10722/digital-7.ttf') format('truetype');
+    font-style: normal;
+}
+
+
+::selection {
+   @apply bg-green-500 text-white;
+}
+
 body {
-  @apply bg-gray-100 text-gray-700 flex justify-center items-center h-screen text-center;
+  @apply text-gray-700 flex justify-center items-center text-center py-6 min-h-screen;
+   background: linear-gradient(to bottom right, oklch(79.2% 0.209 151.711), oklch(70.4% 0.191 22.216));
 }
 
 h1 {
-  @apply text-3xl font-bold;
+  @apply text-4xl font-bold font-['Times_New_Roman'] tracking-wide;
+}
+
+h1::after {
+   content: '';
+   display: block;
+   height: 2px;
+   width: 90%;
+   margin: 15px auto;
+   background: linear-gradient(to right, transparent, oklch(62.7% 0.194 149.214), oklch(57.7% 0.245 27.325), transparent);
 }
 
 .container {
-  @apply bg-white p-6 shadow-2xl rounded-2xl mt-6 w-2xl;
+  @apply p-6 shadow-2xl rounded-2xl mt-6 flex flex-col justify-center items-center h-auto gap-2 w-4xl;
+   background: linear-gradient(to bottom right, oklch(90.5% 0.182 98.111), oklch(83.7% 0.128 66.29), oklch(65.6% 0.241 354.308));
+}
+
+.task-container {
+   @apply flex w-full items-center justify-between gap-4 min-w-0;
+}
+
+.task-number {
+   @apply flex text-center items-center shrink-0;
+}
+
+.task-number span {
+   @apply block rounded-md text-[12rem] -m-20 -ml-4 select-none text-green-300;
+}
+
+.bg-task-completed {
+    background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('https://elements-resized.envatousercontent.com/envato-dam-assets-production/EVA/TRX/3e/4e/52/d7/6e/v1_E10/E10JODNM.jpg?w=1000&cf_fit=scale-down&mark-alpha=18&mark=https%3A%2F%2Felements-assets.envato.com%2Fstatic%2Fwatermark4.png&q=85&format=auto&s=c821a10aa9ad7616cab1f0775ddbf674c277d49dc3001bce999182d079db9a8e');
+}
+
+.bg-task-uncompleted {
+    background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('https://cdn.pixabay.com/photo/2016/11/22/23/09/fountain-pen-1851096_1280.jpg');
 }
 
 .list-task {
-  @apply bg-blue-50 mb-5 p-4 rounded-md shadow-lg;
+  @apply mb-5 rounded-lg shadow-xl relative overflow-hidden bg-cover bg-center bg-no-repeat w-full min-w-0 flex flex-col justify-center items-center h-auto py-6;
 }
 
 .list-task h2 {
-  @apply text-2xl font-bold leading-tight mb-4 font-serif;
+  @apply text-3xl leading-tight mb-4 tracking-wide;
+}
+
+.list-task video {
+   @apply absolute inset-0 object-cover
+}
+
+.list-task .content {
+   @apply relative z-1 opacity-75 w-full max-w-full min-w-0 px-4 text-center z-10
 }
 
 .container-btn {
-  @apply bg-gray-50 mb-5 p-4 rounded-md flex justify-center items-center w-full gap-2;
+  @apply mb-5 p-4 rounded-md flex flex-wrap justify-center items-center gap-2 mt-4 w-full;
 }
 
 button {
-  @apply font-bold text-sm p-2 rounded-md;
+  @apply font-bold text-sm p-2 rounded-md cursor-pointer;
 }
 
 .add-task-btn {
@@ -37,4 +115,69 @@ button {
 }
 .remove-task-btn {
   @apply bg-red-400 text-gray-100;
+}
+
+.timer {
+    font-family: 'Digital7', sans-serif;
+    color: #00ff00; 
+    background-color: #111; 
+    @apply text-2xl w-fit py-1 px-2 rounded-md;
+}
+
+.empty-task {
+   @apply p-9 text-xl bg-gray-100 rounded-md mb-4;
+   background: linear-gradient(to bottom, oklch(88.5% 0.062 18.334), oklch(92.5% 0.084 155.995));
+}
+
+.empty-task h3 {
+   @apply text-2xl mb-3 font-bold text-red-900 tracking-wide
+}
+
+.empty-task p {
+   @apply font-serif italic text-base text-green-900 tracking-wide;
+}
+
+.task-name-done {
+    @apply line-through text-red-600 italic break-words max-w-full block
+}
+
+.task-name-running {
+   background: rgba(255, 255, 255, 0.6);
+   @apply w-fit text-center m-auto text-cyan-400 px-2 text-shadow-2xs text-shadow-pink-500 rounded-md shadow-2xl break-words max-w-full block;
+}
+
+.task-name-not-running {
+    @apply text-cyan-500 break-words;
+}
+
+.running-video {
+   @apply block absolute inset-0 w-full h-full object-cover
+}
+
+.bg-task-not-running {
+   @apply w-full max-w-full min-w-0 px-4 text-center z-10
+}
+
+.btn-task-completed {
+   @apply border border-red-600 text-red-600;
+}
+
+.btn-disabled {
+   @apply pointer-events-none bg-gray-300 text-gray-500 opacity-60;
+}
+
+.loading-tasks {
+   @apply rounded-2xl h-80 w-full;
+}
+
+@media (max-width: 600px) {
+    h1 {
+        @apply text-2xl;
+    }
+    .container {
+        @apply w-full;
+    }
+    button {
+        @apply font-medium text-xs;
+    }
 }
