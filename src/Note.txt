@@ -44,6 +44,17 @@ Button for Run play task
 
 
 
+Wordpress utk SEO yg lebih baik
 
-
+Tools yang akan membantu:
+    https://leadspider.net/
+    https://www.oketheme.com/
+    https://www.domosquare.com/
+    https://search.google.com/search-console/
+    
+Step-by-step website muncul di google:
+    crawling 
+        (proses otomatis saat program komputer atau bot menjelajahi, membaca, dan mengumpulkan data dari berbagai halaman web di internet)
+    indexing 
+        (proses otomatis saat program komputer atau bot menjelajahi, membaca, dan mengumpulkan data dari berbagai halaman web di internet)
 
