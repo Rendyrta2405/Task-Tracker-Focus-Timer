@@ -155,6 +155,12 @@ function App() {
     };
 
     const handleRemoveTask = async (id, taskName) => {
+        const selectedTask = tasks.find((t) => t.$id === '6a7cfe710027262dec52');
+
+       if (selectedTask) {
+          return alert('Anda tidak dapat menghapus Task ini karena anda bukan Admin!')
+       };
+        
         await removeTask(id, taskName);
         await loadAllTasks().catch(console.error);
     };
