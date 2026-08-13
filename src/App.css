@@ -142,8 +142,8 @@ button {
 }
 
 .task-name-running {
-   background: rgba(255, 255, 255, 0.4);
-   @apply w-fit text-center m-auto text-cyan-500 px-2 text-shadow-2xs rounded-md shadow-2xl break-words max-w-full block;
+   background: rgba(255, 255, 255, 0.6);
+   @apply w-fit text-center m-auto text-cyan-400 px-2 text-shadow-2xs rounded-md shadow-2xl break-words max-w-full block;
 }
 
 .task-name-not-running {
