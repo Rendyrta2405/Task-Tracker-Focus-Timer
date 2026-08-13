@@ -48,10 +48,10 @@ function App() {
    }, [])
 
     const handleCreateTask = async () => {
-         const taskName = prompt('Enter Task Name (Max 255 characters long):');
+         const taskName = prompt('Masukkan nama tugas (maksimal 255 karakter):');
          if (!taskName) return;
        
-         const totalDurationInSeconds = parseInt(prompt('Enter Task Duration In Minutes (Max: 1440 minutes):')) * 60;
+         const totalDurationInSeconds = parseInt(prompt('Masukkan durasi tugas dalam menit (Maks.: 1440 menit):')) * 60;
          if (!totalDurationInSeconds) return;
          if (totalDurationInSeconds > 86400) {
             return alert('Task duration must not exceed 1.440 minutes. Try again');
