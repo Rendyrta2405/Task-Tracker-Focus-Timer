@@ -54,7 +54,7 @@ function App() {
          const totalDurationInSeconds = parseInt(prompt('Masukkan durasi tugas dalam menit (Maks: 1440 menit):')) * 60;
          if (!totalDurationInSeconds) return;
          if (totalDurationInSeconds > 86400) {
-            return alert('Task duration must not exceed 1.440 minutes. Try again');
+            return alert('Durasi tugas tidak boleh melebihi 1440 menit. Silakan coba lagi.');
          }
        
         const selectedVideo = () => {
